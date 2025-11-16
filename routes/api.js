@@ -8,5 +8,6 @@ router.post('/client', clientController.createClient);
 router.post('/recharge', rechargeController.rechargeBalance);
 router.post('/payment', paymentController.paymentRegister);
 router.post('/payment-confirm/:sessionId', paymentController.paymentConfirm);
+router.post('/get-balance', clientController.getBalance);
 
 module.exports = router;
