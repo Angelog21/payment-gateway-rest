@@ -1,13 +1,13 @@
 const soap = require('soap');
 
-let createClient = (payload) => {
+const paymentRegister = (payload) => {
     return new Promise((resolve, reject) => {
         try {
             const baseUrl = process.env.SOAP_SERVICE_URL ;
-            const wsdlUrl = `${baseUrl}/api/user/wsdl`;
-            const endpointUrl = `${baseUrl}/api/user/server`;
+            const wsdlUrl = `${baseUrl}/api/payment/wsdl`;
+            const endpointUrl = `${baseUrl}/api/payment/server`;
 
-            if (!payload || !payload.name || !payload.dni || !payload.email || !payload.phone) {
+            if (!payload || !payload.dni || !payload.phone || !payload.amount) {
                 return reject({
                     success: false,
                     error_code: 400,
@@ -31,11 +31,10 @@ let createClient = (payload) => {
                 const args = {
                     dni: payload.dni,
                     phone: payload.phone,
-                    name: payload.name,
-                    email: payload.email
+                    amount: payload.amount,
                 };
 
-                client.registerUser(args, (callErr, result) => {
+                client.paymentRegister(args, (callErr, result) => {
                     if (callErr) {
                         return reject({
                             success: false,
@@ -95,18 +94,18 @@ let createClient = (payload) => {
     });
 }
 
-let getBalance = (payload) => {
+const paymentConfirm = (params,payload) => {
     return new Promise((resolve, reject) => {
         try {
             const baseUrl = process.env.SOAP_SERVICE_URL ;
-            const wsdlUrl = `${baseUrl}/api/user/wsdl`;
-            const endpointUrl = `${baseUrl}/api/user/server`;
+            const wsdlUrl = `${baseUrl}/api/payment/wsdl`;
+            const endpointUrl = `${baseUrl}/api/payment/server`;
 
-            if (!payload || !payload.dni || !payload.phone) {
+            if ( !params.sessionId || !payload.token ) {
                 return reject({
                     success: false,
                     error_code: 400,
-                    message: "Faltan datos para realizar la consulta de saldo.",
+                    message: "Faltan datos para realizar el registro.",
                     data: []
                 });
             }
@@ -124,11 +123,11 @@ let getBalance = (payload) => {
                 client.setEndpoint(endpointUrl);
 
                 const args = {
-                    dni: payload.dni,
-                    phone: payload.phone
+                    sessionId: params.sessionId,
+                    token: payload.token,
                 };
 
-                client.getBalance(args, (callErr, result) => {
+                client.paymentConfirm(args, (callErr, result) => {
                     if (callErr) {
                         return reject({
                             success: false,
@@ -189,6 +188,6 @@ let getBalance = (payload) => {
 }
 
 module.exports = {
-    createClient,
-    getBalance
+    paymentRegister,
+    paymentConfirm
 }

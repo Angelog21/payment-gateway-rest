@@ -1,9 +1,9 @@
-const clientService = require('../services/clientService');
+const paymentService = require('../services/paymentService');
 
-const createClient = async (req,res) => {
+const paymentRegister = async (req,res) => {
     try {
         
-        let serviceResponse = await clientService.createClient(req.body);
+        let serviceResponse = await paymentService.paymentRegister(req.body);
 
         return res.json(serviceResponse);
 
@@ -17,10 +17,10 @@ const createClient = async (req,res) => {
     }
 }
 
-const getBalance = async (req,res) => {
+const paymentConfirm = async (req,res) => {
     try {
         
-        let serviceResponse = await clientService.getBalance(req.body);
+        let serviceResponse = await paymentService.paymentConfirm(req.params,req.body);
 
         return res.json(serviceResponse);
 
@@ -35,6 +35,6 @@ const getBalance = async (req,res) => {
 }
 
 module.exports = {
-    createClient,
-    getBalance
+    paymentRegister,
+    paymentConfirm
 }
