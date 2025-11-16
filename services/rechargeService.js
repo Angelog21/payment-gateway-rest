@@ -1,13 +1,13 @@
 const soap = require('soap');
 
-let createClient = (payload) => {
+let rechargeBalance = (payload) => {
     return new Promise((resolve, reject) => {
         try {
             const baseUrl = process.env.SOAP_SERVICE_URL ;
-            const wsdlUrl = `${baseUrl}/api/user/wsdl`;
-            const endpointUrl = `${baseUrl}/api/user/server`;
+            const wsdlUrl = `${baseUrl}/api/recharge/wsdl`;
+            const endpointUrl = `${baseUrl}/api/recharge/server`;
 
-            if (!payload || !payload.name || !payload.dni || !payload.email || !payload.phone) {
+            if (!payload || !payload.dni || !payload.phone || !payload.amount) {
                 return reject({
                     success: false,
                     error_code: 400,
@@ -31,11 +31,10 @@ let createClient = (payload) => {
                 const args = {
                     dni: payload.dni,
                     phone: payload.phone,
-                    name: payload.name,
-                    email: payload.email
+                    amount: payload.amount,
                 };
 
-                client.registerUser(args, (callErr, result) => {
+                client.rechargeBalance(args, (callErr, result) => {
                     if (callErr) {
                         return reject({
                             success: false,
@@ -98,5 +97,5 @@ let createClient = (payload) => {
 }
 
 module.exports = {
-    createClient
+    rechargeBalance
 }
